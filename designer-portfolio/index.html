@@ -1,0 +1,949 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设计师作品集 |Celia Zhao</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- GSAP 动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#111111',
+                        secondary: '#333333',
+                        accent: '#0066ff',
+                        light: '#f5f5f5',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    transitionProperty: {
+                        'height': 'height',
+                        'spacing': 'margin, padding',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-balance {
+                text-wrap: balance;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .transition-transform {
+                transition-property: transform;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                transition-duration: 300ms;
+            }
+            .hover-scale {
+                @apply hover:scale-105 transition-transform duration-300;
+            }
+            .card-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .nav-shadow {
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            }
+        }
+    </style>
+    
+    <style>
+        /* 自定义滚动区域的自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* 平滑区域的动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .fade-in.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 作品卡片悬停效果 */
+        .work-card {
+            transition: all 0.3s ease;
+        }
+        
+        .work-card:hover .work-overlay {
+            opacity: 1;
+        }
+        
+        .work-overlay {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        /* 导航栏滚动效果 */
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 50;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-white text-primary font-sans">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="navbar-fixed bg-white bg-opacity-95 nav-shadow py-4">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="flex justify-between-between items-center">
+                <a href="#" class="text-2xl font-bold text-primary">Celia Zhao</a>
+                
+                <!-- 桌面导航 -->
+                <div class="hidden md:flex ml-auto space-x-8">
+                    <a href="#home" class="text-secondary hover:text-accent transition-colors">Home</a>
+                    <a href="#works" class="text-secondary hover:text-accent transition-colors">Works</a>
+                    <a href="#research" class="text-secondary hover:text-accent transition-colors">Research</a>
+                    <a href="#about" class="text-secondary hover:text-accent transition-colors">About</a>
+                    <a href="#contact" class="text-secondary hover:text-accent transition-colors">Contact</a>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="menu-toggle" class="md:hidden ml-auto text-primary focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden bg-white hidden absolute top-full left-0 w-full border-t border-gray-100">
+            <div class="container mx-auto px-4 py-4">
+                <a href="#home" class="block py-2 text-secondary hover:text-accent">Home</a>
+                <a href="#works" class="block py-2 text-secondaryary hover:text-accent">Works</a>
+                <a href="#research" class="block py-2 text-secondary hover:text-accent">Research</a>
+                <a href="#about" class="block py-2 text-secondaryary hover:text-accent">About</a>
+                <a href="#contact" class="block py-2 text-secondary hover:text-accent">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section id="home" class="min-h-screen flex items-center pt-16">
+        <div class="container mx-auto px-4 py-16">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                <!-- 左侧文字内容 -->
+                <div class="max-w-3xl md:w-1/2">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight" style="font-size: 96px;">Hi, I'm Celia Zhao 👋</h1>
+                    <p class="text-xl md:text-2xl text-gray-600 mb-8" style="font-size: 18px; line-height: 27px; color: rgb(33, 35, 38);">
+                        A researcher crafting innovative products and new experiences at the intersection of design and technology.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#research" class="px-8 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition duration-300">
+                            View My Work
+                        </a>
+                        <a href="#about" class="px-8 py-3 border border-gray-300 text-black font-medium rounded-md hover:bg-gray-100 transition duration-300">
+                            About Me
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 右侧图片 -->
+                <div class="md:w-2/5 relative">
+                    <div class="aspect-[3/4] rounded-lg overflow-hidden">
+                        <img src="images/celia-zhao-profile.jpg" alt="Ada Wang - Designer" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 研究成果区 -->
+    <section id="research" class="py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center">Research &amp; Projects</h2>
+            
+            <!-- 研究兴趣 -->
+            <div class="mb-20 fade-in">
+                <h3 class="text-2xl font-semibold mb-6">Research Interests</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h4 class="text-xl font-medium mb-3" style="text-align: center; font-size: 24px;">Ergonomics</h4>
+                        <p class="text-gray-600">
+</p>
+                    </div>
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h4 class="text-xl font-medium mb-3" style="font-size: 24px;"> Human-Comouter Interaction</h4>
+                        <p class="text-gray-600">
+</p>
+                    </div>
+                    <div class="p-6 bg-gray-50 rounded-lg">
+                        <h4 class="text-xl font-medium mb-3" style="font-size: 24px; text-align: center;">Industrial Design</h4>
+                        <p class="text-gray-600">
+</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Publications -->
+            <div class="mb-20 fade-in">
+                <h3 class="text-2xl font-semibold mb-6">Publications</h3>
+                <div class="space-y-6">
+                    <div class="p-6 border-l-4 border-accent bg-gray-50 rounded-r-lg">
+                        <h4 class="text-xl font-medium mb-2" style="font-weight: normal;"><strong>ZHAO Xiaoyi</strong>, ZHAO Chuan, YANG Winxin, LIU Siqi</h4>
+                        <p class="text-gray-800 font-medium mb-2"> "A Residual Neural Network Muscel Fatigue 
+Prediction Model for Overhead Tasks." </p>
+                        <p class="text-gray-600 mb-2">Journal of Medical Biomechanics, 2024,39(03):482-488. 
+</p>
+                        <a href="#" class="text-accent hover:underline">DOI:10.16156/j.1004-7220.2024.03.016. 
+
+</a>
+                    </div>
+                    <div class="p-6 border-l-4 border-accent bg-gray-50 rounded-r-lg">
+                        <h4 class="text-xl font-medium mb-2">ZHAO Chuan, LIU Siqi, <strong>ZHAO Xiaoyi</strong> 
+</h4>
+                        <p class="text-gray-800 font-medium mb-2">"MET Prediction Model of Muscle Fatigue in Driling with 
+Simulated Overhand Position."</p>
+                        <p class="text-gray-600 mb-2">China Safety Science Journal ,2024,34(8): 238-246.
+</p>
+                        <a href="#" class="text-accent hover:underline">DOI:10.16265/j.cnki.issn1003-3033.2024.08.1776. 
+
+</a>
+                    </div>
+                    <div class="p-6 border-l-4 border-accent bg-gray-50 rounded-r-lg">
+                        <h4 class="text-xl font-medium mb-2">ZHAO Chuan, YANG Winxin, <strong>ZHAO Xiaoyi</strong> 
+</h4>
+                        <p class="text-gray-800 font-medium mb-2">"Study on the Influence of Equipment Weight and Posture 
+on Muscle Gatigue in Overhead Work."</p>
+                        <p class="text-gray-600 mb-2">Chinese Journal of Ergonomics, 2024,30(03):12-17</p>
+                        <a href="#" class="text-accent hover:underline">DOI:10.13837/j.issn.1006-8309.2024.03.0003</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 科研项目展示区 -->
+            <div class="fade-in">
+                <h3 class="text-2xl font-semibold mb-10">Research Projects</h3>
+                
+                <!-- 项目1 -->
+                <div class="mb-16">
+                    <h4 class="text-2xl font-bold mb-6" style="font-size: 22px;">Research and design practice of residual neural network muscle fatigue prediction model for overhead work
+</h4>
+                    
+                    <!-- 项目阶段导航 -->
+                    <div class="flex flex-wrap gap-4 mb-8">
+                        <button class="project-tab px-6 py-3 bg-black text-white rounded-md" data-project="1" data-stage="1">Research Background</button>
+                        <button class="project-tab px-6 py-3 bg-gray-200 text-gray-700 rounded-md" data-project="1" data-stage="2">Research Process</button>
+                        <button class="project-tab px-6 py-3 bg-gray-200 text-gray-700 rounded-md" data-project="1" data-stage="3">Validation</button>
+                        <button class="project-tab px-6 py-3 bg-gray-200 text-gray-700 rounded-md" data-project="1" data-stage="4">Model &amp; Product</button>
+                    </div>
+                    
+                    <!-- 项目内容 -->
+                    <div class="project-content" data-project="1">
+                        <!-- 阶段1：研究背景 -->
+                        <div class="project-stage active" data-stage="1">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Background</h5>
+                                    <p class="text-gray-600 mb-4">
+                                        Work-related musculosketetal disorders(WMSDs), it refers to health problems of the musculoskeletal and nervous systems among professional people caused or aggravated by poor postures, long-term force application and repetitive operations and other poor ergonomic factors during work. It encompasses all forms of health-disease conditions ranging from mild and temporary injuries to irreversible and disabling injuries.
+                                    </p>
+                                    <p class="text-gray-600 mb-4">
+                                        Overhead work, It is usually defined as performing hand tasks when the hand is above the shoulder or when the flexion and extension angle of the shoulder joint is greater than 60 degrees. Working in this posture not only reduces work capacity and efficiency but also lowers the precision of task completion.
+                                    </p>
+                                    <ul class="list-none list-inside text-gray-600 space-y-2">
+                                        <li>Artificial Neural Network(ANNs) models can handle complex relationships, especially nonlinear regression relationships, learn patterns from multiple variables, and make predictions based on existing data. The introduction of neural network models enables the model to more precisely capture the complex interactions among multiple variables, thereby more accurately predicting the relationship between muscle fatigue and work efficiency.
+
+</li>
+                                        
+                                        </ul>
+                                </div>
+                                <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/smart-home-research.png" alt="Smart Home Research" class="w-full rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 阶段2：研究过程 -->
+                        <div class="project-stage hidden" data-stage="2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Research Process</h5>
+                                    <p class="text-gray-600 mb-4">
+                                         Based on the data obtained from experimental analysis, we established a neural network model to predict muscle fatigue, thereby reducing the risk of WMSDs. The research consists of four key phases.
+                                    </p>
+                                    <div class="space-y-4">
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">1</div>
+                                            <div>
+                                                <h6 class="font-medium">Mechanical Experiment Analysis</h6>
+                                                <p class="text-gray-600 text-sm">Recruited 16 male university students as participants for the experiment, and simulated the overhead work environment and measured data from three dimensions--MVC, MET, maximum residual muscle strength.
+</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">2</div>
+                                            <div>
+                                                <h6 class="font-medium">ResNet Building
+</h6>
+                                                <p class="text-gray-600 text-sm">Analyzed 15 leading smart home products and platforms to identify strengths and weaknesses.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">3</div>
+                                            <div>
+                                                <h6 class="font-medium">model validation
+</h6>
+                                                <p class="text-gray-600 text-sm">Organized 5 co-design sessions with users and stakeholders to generate and refine ideas.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">4</div>
+                                            <div>
+                                                <h6 class="font-medium">Wrist Brace Design</h6>
+                                                <p class="text-gray-600 text-sm">Iteratively tested 4 prototype versions with 20 users to validate design decisions.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/research-process-1.png" alt="Research Process" class="w-full rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 阶段3：验证 -->
+                        <div class="project-stage hidden" data-stage="3">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Validation &amp; Results</h5>
+                                    <p class="text-gray-600 mb-4" style="font-size: 15px; line-height: 20px; font-weight: normal; text-align: left;">
+                                     The ResNet model exhibited outstanding predictive accuracy, with a root mean square error(RMSE) of 0.028. Compared with traditional backpropagration neural networks(RMSE=0.053) and multilayer perceptron neural networks(RMSE=0.059), they displayed smaler errors and better fitting.
+                                    </p>
+                                    <div class="space-y-4">
+
+                                        <div class="bg-gray-100 p-4 rounded-lg">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <img src="images/research-process-2.png" alt="Research Process" class="w-full rounded-lg">
+                                                <img src="images/research-process-3.jpg" alt="Research Process" class="w-full rounded-lg">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <p class="text-gray-600 mt-4">
+                                        The propsed residual neural network muscle fatigue prediction model can effectively and accurately predict muscle fatigue, providing strong support for improving work efficiency and reducing the risk of work-related musculoskeletalo disorders.
+                                    </p>
+                                </div>
+                                <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/validation-results-1.png" alt="Validation Results" class="w-full rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 阶段4：模型与产品 -->
+                        <div class="project-stage hidden" data-stage="4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Design Model &amp; Product</h5>
+                                    <p class="text-gray-600 mb-4">
+                                        The model was applied to an example to 
+verify the feasibility of the prediction model, and the optimization design and improvement of wrist joint protector was proposed. Through the redesign and optimization of wrist brace, the degree of muscle fatigue of wrist joint could be effectively reduced, thus reducing the incidence of WMSDs. 
+                                    </p>
+                                    <p class="text-gray-600 mb-4">
+                                        We evaluated these sketches using the PUGH matrix, collecting scores from a decision-making team consisting of 10 design graduate students and 5 design experts.
+                                    </p>
+                                    <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                        <h6 class="font-medium mb-2">Key Features:</h6>
+                                        <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                            <li>An X-shaped support backplate
+</li>
+                                            <li>A ResNet muscle fatigue prediction model processor </li>
+                                            <li> A red light indicates a muscle fatigue warning
+</li>
+                                            <li>A yellow indicator light displays three levels of fatigue alerts
+</li>
+                                            <li>3D high-elastic breathable fabric
+</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/homehub-product.jpg" alt="HomeHub Product" class="w-full rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 项目2 -->
+                <div>
+                    <h4 class="text-2xl font-bold mb-6">Research on the Design of Upper-Limb-Assisting Exoskeletons for Overhead Work
+</h4>
+                    
+                    <!-- 项目阶段导航 -->
+                    <div class="flex flex-wrap gap-4 mb-8">
+                        <button class="project-tab px-6 py-3 bg-black text-white rounded-md" data-project="2" data-stage="1">Research Background</button>
+                        <button class="project-tab px-6 py-3 bg-gray-200 text-gray-700 rounded-md" data-project="2" data-stage="2">Research Process</button>
+                        <button class="project-tab px-6 py-3 bg-gray-200 text-gray-700 rounded-md" data-project="2" data-stage="3">Model &amp; Product</button>
+                        <button class="project-tab px-6 py-3 bg-gray-200 text-gray-700 rounded-md" data-project="2" data-stage="4">Validation</button>
+                    </div>
+                    
+                    <!-- 项目内容 -->
+                    <div class="project-content" data-project="2">
+                        <!-- 阶段1：研究背景 -->
+                        <div class="project-stage active" data-stage="1">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Background</h5>
+                                    <p class="text-gray-600 mb-4">
+                                        In recent years, the technology of exoskeletons for human bodies has been continuously improving, and the types and quantities of exoskeletons have been increasing. However, there are relatively few exoskeletons suitable for maintenance work involving hand-overhead operations. Maintenance personnel often perform repetitive hand-overhead operations for a long time, and they need a suitable auxiliary tool to assist them in maintenance operations and alleviate muscle and bone strain. There is still a certain gap in this field. 
+                                    </p>
+                                    <p class="text-gray-600 mb-4">
+                                        From the perspective of power source, upper limb assistive exoskeletons can be classified into two types: active upper limb assistive exoskeletons and passive upper limb assistive exoskeletons. Passive upper limb assistive exoskeletons do not require external energy. They usually generate assistive functions by releasing the stored energy through elastic energy storage components. The source of the assistance is generally the elastic potential energy of springs, coil springs, and elastic soft materials, etc.
+</p>
+                                    <ul class="list-none list-inside text-gray-600 space-y-2">
+                                    </ul>
+                                </div>
+                                <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/sustainable-packaging-research.png" alt="Sustainable Packaging Research" class="w-full rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 阶段2：研究过程 -->
+                        <div class="project-stage hidden" data-stage="2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Research Process</h5>
+                                    <p class="text-gray-600 mb-4">
+                                        This project was divided into four phases.                   </p>
+                                    <div class="space-y-4">
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">1</div>
+                                            <div>
+                                                <h6 class="font-medium">Ergonomics Analysis</h6>
+                                                <p class="text-gray-600 text-sm">We conducted ergonomic analysis through literature research, which mainly included upper body size, anatomy, joint range of motion analyses, behavior analysis during overhead work.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">2</div>
+                                            <div>
+                                                <h6 class="font-medium">Design of the Exoskeleton System
+</h6>
+                                                <p class="text-gray-600 text-sm">The exoskeleton scheme was designed with the purpose of providing assistance in the overhand range and no assistance in other ranges, which was specifically achieved through the cooperation of cams, connecting rods and torsion springs, change the change curve of the support force to provide better assistance for overhand operations.
+</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">3</div>
+                                            <div>
+                                                <h6 class="font-medium">Dynamics Simulation Analysis
+</h6>
+                                                <p class="text-gray-600 text-sm">We input the rotation angle range of each joint of the exoskeleton into the program to simulate its workspace range and Adams dynamic simulation analysis.</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <div class="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-1 flex-shrink-0">4</div>
+                                            <div>
+                                                <h6 class="font-medium">User Experience Evaluation
+</h6>
+                                                <p class="text-gray-600 text-sm">we used EMG (electromyographic) signals; for the subjective evaluation, we adopted the Borg Scale.
+</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/packaging-research-process.png" alt="Packaging Research Process" class="w-full rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 阶段3：模型与产品 -->
+                        <div class="project-stage hidden" data-stage="3">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Design Model &amp; Product</h5>
+                                    <p class="text-gray-600 mb-4">
+                                        There is the CMF design and final renderings of the exoskeleton.
+                                    </p>
+                                    <p class="text-gray-600 mb-4">
+                                        The system includes the overall scheme of the exoskeleton and the design details of its main parts. 
+                                    </p>
+                                    <div class="bg-gray-100 p-4 rounded-lg mb-4">
+                                        <h6 class="font-medium mb-2">System Components:</h6>
+                                        <ul class="list-disc list-inside text-gray-600 text-sm space-y-1">
+                                            <li>The structure and operation mode of the cam and connecting rod sliding state
+</li>
+                                            <li>Followed by the degree of freedom scheme design
+</li>
+                                            <li>The linkage between the cam and the shaft</li>
+                                            <li>Combining the "human-machine-environment" system
+</li>
+                                            <li>practical application factors
+</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/sustainable-packaging-system.png" alt="Sustainable Packaging System" class="w-full rounded-lg">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 阶段4：验证 -->
+   
+  <div class="project-stage hidden" data-stage="4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h5 class="text-xl font-semibold mb-4">Validation &amp; Results</h5>
+                                    <p class="text-gray-600 mb-4" style="font-size: 15px; line-height: 20px; font-weight: normal; text-align: left;">
+                                     The ResNet model exhibited outstanding predictive accuracy, with a root mean square error(RMSE) of 0.028. Compared with traditional backpropagration neural networks(RMSE=0.053) and multilayer perceptron neural networks(RMSE=0.059), they displayed smaler errors and better fitting.
+                                    </p>
+                                    <div class="space-y-4">
+
+<div class="bg-gray-100 p-4 rounded-lg">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <img src="images/research-process-5.png" alt="Research Process" class="w-full rounded-lg">
+        <img src="images/research-process-4.png" alt="Research Process" class="w-full rounded-lg">
+    </div>
+</div>
+
+                                    </div>
+                                    <p class="text-gray-600 mt-4">
+ We recruited 12 adult males to participate in the experiments, as shown in the figure. During the experiments, we measured EMG signals, mainly selecting the main muscles we analyzed earlier. Then, we processed the EMG signals with a second-order IIR Butterworth filter (30-400Hz high-channel filtering) to reduce the impact of heart rate and other muscle signals.
+                                    </p>
+                                </div>
+                           <div class="bg-gray-100 p-8 rounded-lg">
+                                    <img src="images/validation-results-2.jpg" alt="Validation Results" class="w-full rounded-lg">
+                                </div>
+                        </div>
+    </div></div></div></div></div></section>
+
+    <!-- 作品展示区 -->
+<div class="container mx-auto px-4">
+    <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center">Selected Works</h2>
+    
+    <!-- 作品网格 (仅显示3个) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 作品1 -->
+        <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="Product Design">
+            <div class="relative overflow-hidden">
+                <img src="images/social-app-design.jpg" alt="Mobile App UI Design" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Design of Leg Acupuncture Massage Device</h3>
+                <p class="text-gray-600 text-sm mb-4">The leg acupuncture massage device designed by Boao Company works by using internal micro-components to stimulate the leg muscles, thereby achieving the effects of massage and relaxation.</p>
+                <div class="flex justify-between items-center">
+                    <div class="px-4 py-2 bg-gray-100 rounded-full text-sm">Product Design</div>
+                    <a href="works/work1.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 作品2 -->
+        <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="Branding">
+            <div class="relative overflow-hidden">
+                <img src="images/related-work2.jpg" alt="Branding Design" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Interactrion Design of Interest-based Social App</h3>
+                <p class="text-gray-600 text-sm mb-4">Social media is UGC(User-generated Content) based on topics of interest. Users of interest social apps form social relationships through the creation, sharing, comment and communication of self-generated content.</p>
+                <div class="flex justify-between items-center">
+                    <div class="px-4 py-2 bg-gray-100 rounded-full text-sm">UI &amp; UX Design</div>
+                    <a href="works/work3.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 作品3 -->
+        <div class="work-card bg-white rounded-lg overflow-hidden shadow-sm group" data-category="3D Design">
+            <div class="relative overflow-hidden">
+                <img src="images/related-work3.jpg" alt="3D Product Rendering" class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
+                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <span class="px-4 py-2 bg-white text-black text-sm font-medium rounded-md transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">View Details</span>
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">Innovative Design of Multi-functional Instant Hot Water Dispenser</h3>
+                <p class="text-gray-600 text-sm mb-4">The design of team water purification, and water dispenser modular combination, convenitent for users for tea, coffee, and other drinks demand.</p>
+                <div class="flex justify-between items-center">
+                    <div class="px-4 py-2 bg-gray-100 rounded-full text-sm">Product Design</div>
+                    <a href="works/work6.html" class="text-accent text-sm font-medium hover:underline">View Project</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+    <!-- 关于我区域 -->
+    <section id="about" class="py-24">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-top gap-12">
+                <div class="md:w-1/3">
+                    <div class="relative">
+                        <img src="images/celia-zhao-about.jpg" alt="Celia Zhao" class="w-full rounded-lg relative z-10">
+                    </div>
+                </div>
+                
+                <div class="md:w-2/3">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">About Me</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        I'm Xiaoyi(Celia) Zhao and I'm from China, a Master's graduate in Industrial Design Engineering from Qingdao University (GPA 3.78/4.0), with a specialized focus on Ergonomics and Human-Computer Interaction (HCI).&nbsp;I currently work as a User Researcher at the&nbsp;Tsinghua (Qingdao) Academy of Arts and Science Innovation Research(TASA).
+                    </p>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        About my work experience and academic skills, currently, I work as a User Researcher at TASA, where I mainly focus on user research and product development. My core expertise lies in integrating ergonomic principles, deep learning, and human-machine interaction (HMI) design, honed through key projects. I also published an EI paper and 2 Core Journal papers on ergonomic HMI optimization and Computer Science.
+                    </p>
+                    
+                    <!-- 技能 -->
+                    <div class="mb-12">
+                        <h3 class="text-xl font-semibold mb-4">Skills</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">Ergonomics</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">Industrial Design</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">HCI</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">User Research</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">Computer-aided Industrial Design</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">UX Research</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">Matlab</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">Rhino</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">Solidworks</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">Statistics</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">JACK</span>
+                            <span class="px-4 py-2 bg-gray-100 rounded-full text-sm">NVivo
+                        </span></div>
+                    </div>
+                    
+                    <!-- 经验和教育 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- 经验 -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Experience</h3>
+                            <div class="space-y-6">
+                                <div>
+                                    <h4 class="font-medium">Product Intern</h4>
+                                    <p class="text-gray-600 text-sm">Haier Innovation Design Center</p>
+                                    <p class="text-gray-500 text-xs" style="font-size: 14px; line-height: 36px; color: rgb(141, 145, 153);">2022 - 2023</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">User Researcher</h4>
+                                    <p class="text-gray-600 text-sm">TASA-International Industry Research Department</p>
+                                    <p class="text-gray-500 text-xs" style="font-size: 14px; line-height: 36px; color: rgb(141, 145, 153);">2023 - Present</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">
+</h4>
+                                    <p class="text-gray-600 text-sm">
+</p>
+                                    <p class="text-gray-500 text-xs" style="font-size: 14px; line-height: 36px; color: rgb(141, 145, 153);">
+</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 教育 -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Education</h3>
+                            <div class="space-y-6">
+                                <div>
+                                    <h4 class="font-medium">Master of Industrial Design Engineering</h4>
+                                    <p class="text-gray-600 text-sm">Qingdao University</p>
+                                    <p class="text-gray-500 text-xs" style="font-size: 14px; line-height: 36px; color: rgb(141, 145, 153);">2021 - 2024</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">Bachelor of Product Design</h4>
+                                    <p class="text-gray-600 text-sm">Qingdao University of Science &amp; Technology</p>
+                                    <p class="text-gray-500 text-xs" style="font-size: 14px; line-height: 36px; color: rgb(141, 145, 153);">2015 - 2019</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式区域 -->
+    <section id="contact" class="py-24 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center">Get In Touch</h2>
+            <div class="flex flex-col lg:flex-row gap-12">                
+                <!-- 右侧联系表单 -->
+                <div class="mx-auto px-4">
+                    <div class="bg-white p-8 rounded-lg shadow-sm">
+                        <h3 class="text-2xl font-semibold mb-6">Send Me a Message</h3>
+                        
+                        <form id="contact-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent">
+                            </div>
+                            
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                                <textarea id="message" name="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full px-8 py-3 bg-black text-white font-medium rounded-md hover:bg-gray-800 transition duration-300">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-12 bg-black text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold">Celia Zhao</h3>
+                    <p class="text-gray-400 mt-2">Industrial Designer &amp; User Researcher.</p>
+                </div>
+                
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fa fa-behance text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fa fa-dribbble text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fa fa-instagram text-xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fa fa-linkedin text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2026 Celia Zhao. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 回到顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-black text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            menuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 关闭移动菜单（如果打开）
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, // 考虑导航栏高度
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 导航栏滚动效果
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-white', 'shadow-md');
+                    navbar.classList.remove('bg-opacity-95');
+                } else {
+                    navbar.classList.remove('shadow-md');
+                    navbar.classList.add('bg-opacity-95');
+                }
+            });
+            
+            // 回到顶部按钮
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 滚动动画
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInOnScroll = function() {
+                fadeElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const windowHeight = window.innerHeight;
+                    
+                    if (elementTop < windowHeight - 100) {
+                        element.classList.add('active');
+                    }
+                });
+            };
+            
+            // 初始检查
+            fadeInOnScroll();
+            
+            // 滚动时检查
+            window.addEventListener('scroll', fadeInOnScroll);
+            
+            // 项目标签切换功能
+            document.querySelectorAll('.project-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const project = tab.dataset.project;
+                    const stage = tab.dataset.stage;
+                    
+                    // 移除所有标签的active类和样式
+                    document.querySelectorAll('.project-tab').forEach(t => {
+                        t.classList.remove('bg-black', 'text-white');
+                        t.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    
+                    // 为当前点击的标签添加样式
+                    tab.classList.remove('bg-gray-200', 'text-gray-700');
+                    tab.classList.add('bg-black', 'text-white');
+                    
+                    // 隐藏所有项目内容
+                    document.querySelectorAll(`.project-content[data-project="${project}"] .project-stage`).forEach(stage => {
+                        stage.classList.add('hidden');
+                        stage.classList.remove('active');
+                    });
+                    
+                    // 显示选中的项目内容
+                    const activeStage = document.querySelector(`.project-content[data-project="${project}"] .project-stage[data-stage="${stage}"]`);
+                    if (activeStage) {
+                        activeStage.classList.remove('hidden');
+                        activeStage.classList.add('active');
+                    }
+                });
+            });
+            
+            // 使用 GSAP 添加更复杂的动画
+            if (typeof gsap !== 'undefined') {
+                // Hero 区域动画
+                gsap.from('#home h1', {
+                    opacity: 0,
+                    y: 50,
+                    duration: 1,
+                    delay: 0.2
+                });
+                
+                gsap.from('#home p', {
+                    opacity: 0,
+                    y: 30,
+                    duration: 1,
+                    delay: 0.5
+                });
+                
+                gsap.from('#home .flex', {
+                    opacity: 0,
+                    y: 20,
+                    duration: 1,
+                    delay: 0.8
+                });
+                
+                // 作品卡片动画
+                gsap.utils.toArray('.work-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top bottom-=100',
+                            toggleActions: 'play none none none'
+                        },
+                        opacity: 0,
+                        y: 50,
+                        duration: 0.8,
+                        delay: i * 0.1
+                    });
+                });
+            }
+            
+            // 表单提交处理
+            const contactForm = document.getElementById('contact-form');
+            
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // 获取表单数据
+                    const formData = new FormData(contactForm);
+                    const formDataObject = {};
+                    
+                    formData.forEach((value, key) => {
+                        formDataObject[key] = value;
+                    });
+                    
+                    // 在实际应用中，这里会发送数据到服务器
+                    // 这里仅做演示，显示提交成功消息
+                    alert('Message sent successfully!');
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+
+
+</body></html>
